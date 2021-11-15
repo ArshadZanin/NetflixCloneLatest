@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone_latest/controller/widget_controller.dart';
 import 'package:netflix_clone_latest/models/content_info.dart';
 import 'package:netflix_clone_latest/pages/row_movie.dart';
-
+import 'package:get/get.dart';
 
 class MovieView extends StatefulWidget {
   final Result article;
@@ -13,20 +14,21 @@ class MovieView extends StatefulWidget {
 
 class _MovieViewState extends State<MovieView> {
 
+  var widgetController = Get.put(WidgetController());
+
   @Deprecated('message')
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-
       onRefresh: _refreshLocalGallery,
       child: Scaffold(
-        backgroundColor: const Color(0xff181818),
+        backgroundColor: Colors.grey[900],
         appBar: AppBar(
-          backgroundColor: const Color(0xff181818),
+          backgroundColor: Colors.grey[900],
           elevation: 0,
           actions: [
-            IconButton(onPressed: (){}, icon: const Icon(Icons.cast,color: Colors.grey,)),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.search,color: Colors.white,)),
+            widgetController.greyButton(Icons.cast, () {}),
+            widgetController.greyButton(Icons.search, () {}),
           ],
         ),
         body: ListView(
@@ -34,13 +36,11 @@ class _MovieViewState extends State<MovieView> {
             Card(
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)
-              ),
+                  borderRadius: BorderRadius.circular(5)),
               child: AspectRatio(
                 aspectRatio: 2,
                 child: Image.network(
                   'http://image.tmdb.org/t/p/original${widget.article.backdropPath}',
-                  // /lNyLSOKMMeUPr1RsL4KcRuIXwHt.jpg
                   fit: BoxFit.cover,
                 ),
               ),
@@ -51,9 +51,10 @@ class _MovieViewState extends State<MovieView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${widget.article.title ?? widget.article.name}",style: const TextStyle(color: Colors.white,fontSize: 20),),
-                  // const Text("Only CAM version available.",style: TextStyle(color: Colors.white,fontSize: 15),),
-
+                  Text(
+                    "${widget.article.title ?? widget.article.name}",
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -61,77 +62,61 @@ class _MovieViewState extends State<MovieView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Science Fiction, Action",style: TextStyle(color: Colors.white60,fontSize: 15),),
+                            widgetController.whiteText("Science Fiction, Action", 15),
                             Row(
                               children: [
-                                Text((widget.article.firstAirDate ?? widget.article.releaseDate).toString().substring(0, 4),style: const TextStyle(color: Colors.white60,fontSize: 15),),
-                                const SizedBox(width: 10,),
-                                Text(widget.article.voteAverage.toString(),style: const TextStyle(color: Colors.white60,fontSize: 15),),
-                                const SizedBox(width: 10,),
-                                const Text("97 mins",style: TextStyle(color: Colors.white60,fontSize: 15),),
+                                widgetController.whiteText((widget.article.firstAirDate ??
+                                          widget.article.releaseDate)
+                                      .toString()
+                                      .substring(0, 4), 15),
+                                const SizedBox(
+                                  width: 10
+                                ),
+                                widget.article.voteAverage == 0.0
+                                    ? Container()
+                                    : widgetController.whiteText(
+                                        widget.article.voteAverage.toString(), 15),
+                                const SizedBox(
+                                  width: 10
+                                ),
+                                widgetController.whiteText("97 Min", 15),
                               ],
                             ),
                           ],
                         ),
                       ),
-
-                      FlatButton(onPressed: (){
-                        // Navigator.push(context, MaterialPageRoute(builder: (_)=> const RowMovie()));
-                      }, child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5)
-                        ),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.play_arrow,color: Colors.black,),
-                            Text("Watch now",style: TextStyle(color: Colors.black,fontSize: 18),),
-                          ],
-                        ),
-                      )),
-
+                      widgetController.iconTextButtonWhite(Icons.play_arrow, 'Watch now', (){}),
                     ],
                   ),
-
-                  const SizedBox(height: 20,),
-
+                  const SizedBox(
+                    height: 20
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      FlatButton(onPressed: (){}, child: Row(
-                        children: const [
-                          Icon(Icons.live_tv,color: Colors.white,size: 20,),
-                          Text(" Trailer",style: TextStyle(color: Colors.white),),
-                        ],
-                      )),
-                      FlatButton(onPressed: (){}, child: Row(
-                        children: const [
-                          Icon(Icons.book,color: Colors.white,size: 20,),
-                          Text(" Watchlist",style: TextStyle(color: Colors.white),),
-                        ],
-                      )),
-                      FlatButton(onPressed: (){}, child: Row(
-                        children: const [
-                          Icon(Icons.assistant_rounded,color: Colors.white,size: 20,),
-                          Text(" Collection",style: TextStyle(color: Colors.white),),
-                        ],
-                      )),
+                      widgetController.iconTextButton(Icons.live_tv, 'Trailer', (){}),
+                      widgetController.iconTextButton(Icons.book, 'Watchlist', (){}),
+                      widgetController.iconTextButton(Icons.assistant_rounded, 'Collection', (){}),
                     ],
                   ),
-
-                  Text(widget.article.overview.toString(),
-                    style: const TextStyle(color: Colors.white60,fontSize: 15,letterSpacing: 1),
+                  Text(
+                    widget.article.overview.toString(),
+                    style: const TextStyle(
+                        color: Colors.white60, fontSize: 15, letterSpacing: 1),
                   ),
-
-                  const SizedBox(height: 10,),
-                  const Text("Similar movies",style: TextStyle(color: Colors.white,fontSize: 18),),
-
+                  const SizedBox(
+                    height: 20
+                  ),
+                  widgetController.whiteText('Similar movies', 18),
                   const RowMovie(),
-
-                  const SizedBox(height: 10,),
-                  const Text("Related movies",style: TextStyle(color: Colors.white,fontSize: 18),),
+                  const SizedBox(
+                    height: 20
+                  ),
+                  widgetController.whiteText('Related movies', 18),
                   const RowMovie(),
+                  const SizedBox(
+                    height: 20
+                  ),
                 ],
               ),
             )
@@ -140,7 +125,8 @@ class _MovieViewState extends State<MovieView> {
       ),
     );
   }
-  Future<void> _refreshLocalGallery() async{
+
+  Future<void> _refreshLocalGallery() async {
     debugPrint('refreshing stocks...');
     setState(() {});
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:netflix_clone_latest/controller/widget_controller.dart';
 import 'package:netflix_clone_latest/pages/row_movie.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,37 +11,31 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>{
+class _HomePageState extends State<HomePage> {
 
+  var widgetController = Get.put(WidgetController());
   int list = 0;
   ScrollController _myController = ScrollController();
   ScrollController? _scrollController;
   double _scrollOffset = 0.5;
 
-
   @override
-  void initState(){
-    _scrollController = ScrollController()..addListener(() {
-      setState(() {
-        _scrollOffset = _scrollController!.offset;
+  void initState() {
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          _scrollOffset = _scrollController!.offset;
+        });
       });
-    });
-    _myController = ScrollController()..addListener(() {
-      setState(() {
-
+    _myController = ScrollController()
+      ..addListener(() {
+        setState(() {});
       });
-    });
     super.initState();
   }
 
-  // _myController.addListener(() {
-  // setState((){
-  // //do something here
-  // })
-  // });
-
   @override
-  void dispose(){
+  void dispose() {
     _scrollController!.dispose();
     super.dispose();
   }
@@ -50,20 +46,23 @@ class _HomePageState extends State<HomePage>{
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: (){},
-          child: const Icon(Icons.shuffle,color: Colors.purple,),
+        onPressed: () {},
+        child: const Icon(
+          Icons.shuffle,
+          color: Colors.purple,
+        ),
         backgroundColor: Colors.white70,
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 5,
-        color: const Color(0xff111111),
+        color: Colors.black,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: IconButton(icon: const Icon(Icons.home,color: Colors.grey,), onPressed: () {  },),),
-            Expanded(child: IconButton(icon: const Icon(Icons.collections_bookmark,color: Colors.grey,), onPressed: () {  },),),
-            Expanded(child: IconButton(icon: const Icon(Icons.adjust_outlined,color: Colors.grey,), onPressed: () {  },),),
-            Expanded(child: IconButton(icon: const Icon(Icons.settings,color: Colors.grey,), onPressed: () {  },),),
+            Expanded(child: widgetController.greyButton(Icons.home, () {})),
+            Expanded(child: widgetController.greyButton(Icons.collections_bookmark, () {})),
+            Expanded(child: widgetController.greyButton(Icons.adjust_outlined, () {})),
+            Expanded(child: widgetController.greyButton(Icons.settings, () {})),
           ],
         ),
       ),
@@ -90,67 +89,58 @@ class _HomePageState extends State<HomePage>{
                           ),
                           Positioned(
                             bottom: 0.0,
-                              left: 0.0,
-                              right: 0.0,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black45,
-                                    ),
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      spreadRadius: -20.0,
-                                      blurRadius: 20.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    IconButton(onPressed: (){
-                                      setState(() {
-                                        list == 0 ? list = 1 : list = 0;
-                                      });
-                                    }, icon: Icon(list == 0 ? Icons.add : Icons.done, color: Colors.white,size: 35,)),
-
-                                    FlatButton.icon(onPressed: (){}, icon: const Icon(Icons.play_arrow), label: const Text('Play'),color: Colors.white,),
-
-                                    IconButton(onPressed: (){},
-                                        icon: const Icon(Icons.info_outline, color: Colors.white,size: 35,)),
-
-                                  ],
-                                ),
+                            left: 0.0,
+                            right: 0.0,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black45,
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    spreadRadius: -20.0,
+                                    blurRadius: 20.0,
+                                  ),
+                                ],
                               ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          list == 0 ? list = 1 : list = 0;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        list == 0 ? Icons.add : Icons.done,
+                                        color: Colors.white,
+                                        size: 35,
+                                      )),
+                                  widgetController.iconTextButtonWhite(Icons.play_arrow, 'Play', (){}),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.info_outline,
+                                        color: Colors.white,
+                                        size: 35,
+                                      )),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        'Trending Now',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold
-                      ),),
-                    ),
+                    widgetController.headingText(text: 'Trending Now'),
                     const RowMovie(),
-                    const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        'Top 10 in india Today',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold
-                        ),),
-                    ),
+                    const SizedBox(height: 20,),
+                    widgetController.headingText(text: 'Top 10 in india Today'),
                     const RowMovie(),
                   ],
-                )
-            ),
+                )),
           ),
           SizedBox(
             height: 200,
@@ -188,9 +178,9 @@ class _HomePageState extends State<HomePage>{
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          TextButton(onPressed: (){}, child: const Text('TV Shows',style: TextStyle(color: Colors.white,fontSize: 18),)),
-                          TextButton(onPressed: (){}, child: const Text('Movies',style: TextStyle(color: Colors.white,fontSize: 18),)),
-                          TextButton(onPressed: (){}, child: const Text('Categories',style: TextStyle(color: Colors.white,fontSize: 18),)),
+                          widgetController.textButton('TV Shows', (){}),
+                          widgetController.textButton('Movies', (){}),
+                          widgetController.textButton('Categories', (){}),
                         ],
                       ),
                     ),

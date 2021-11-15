@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone_latest/controller/widget_controller.dart';
 import 'package:netflix_clone_latest/models/content_info.dart';
 import 'package:netflix_clone_latest/services/api_manager.dart';
-
 import 'movie_view.dart';
+import 'package:get/get.dart';
 
 class RowMovie extends StatefulWidget {
   const RowMovie({Key? key}) : super(key: key);
@@ -12,13 +13,16 @@ class RowMovie extends StatefulWidget {
 }
 
 class _RowMovieState extends State<RowMovie> {
+
+  var widgetController = Get.put(WidgetController());
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10)
       ),
-      height: 200,
+      height: 210,
       width: MediaQuery.of(context).size.width,
       child: FutureBuilder(
         future: ApiManager().getMovies(),
@@ -75,10 +79,10 @@ class _RowMovieState extends State<RowMovie> {
                       ),
                       Row(
                         children:  [
-                          Expanded(child: Text(name,style: const TextStyle(color: Colors.white,fontSize: 15),)),
+                          Expanded(child: widgetController.whiteText(name, 15)),
                         ],
                       ),
-                      Expanded(child: Text(year,style: const TextStyle(color: Colors.white,fontSize: 13),)),
+                      Expanded(child: widgetController.whiteText(year, 13)),
                       // Image.network(article.urlToImage!)
                     ],
                   ),
@@ -86,7 +90,7 @@ class _RowMovieState extends State<RowMovie> {
               },
             );
           }else{
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: Colors.grey,));
           }
         },
       ),
